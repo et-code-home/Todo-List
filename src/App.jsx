@@ -8,21 +8,15 @@ const App = () => {
   const [nextID, setNextID] = useState(6);
 
   useEffect(() => {
-    // Async-await - create & call a function inside useEffect's callback
+    // To use async-await - create & call a function inside useEffect's callback
     async function fetchTodos() {
       // Fetch initial data from the JSONPlaceholder API
       const response = await fetch('https://jsonplaceholder.typicode.com/todos');
       const data = await response.json();
 
-      const starterTodos = [];
-        for(let i=0; i<5; i++) {
-          const item = data[i];
-          starterTodos.push({
-            id: item.id,
-            text: item.title,
-          });
-        }
-        setTodos(starterTodos);
+      const starterTodos = data.slice(0, 5);
+      console.log(starterTodos)
+      setTodos(starterTodos);
     }
     fetchTodos();
 
@@ -47,10 +41,11 @@ const App = () => {
   const handleAddTodo = (text) => {
     const newTodo = {
       id: nextID,
-      text: text,
+      title: text,
     };
 
-    setNextID(nextID + 1);
+    // You can also pass a function to setState. It lets you update state based on the previous state: https://react.dev/reference/react/Component#setstate
+    setNextID((curID) => curID + 1);
     setTodos((prevTodos) => [...prevTodos, newTodo]);
   };
 
