@@ -8,7 +8,25 @@ const App = () => {
   const [nextID, setNextID] = useState(6);
 
   useEffect(() => {
-    // Fetch initial data from the JSONPlaceholder API
+    // Async-await - create & call a function inside useEffect's callback
+    async function fetchTodos() {
+      // Fetch initial data from the JSONPlaceholder API
+      const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+      const data = await response.json();
+
+      const starterTodos = [];
+        for(let i=0; i<5; i++) {
+          const item = data[i];
+          starterTodos.push({
+            id: item.id,
+            text: item.title,
+          });
+        }
+        setTodos(starterTodos);
+    }
+    fetchTodos();
+
+    /* Promise Chaining - does the same thing as the async function above
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
       .then((data) => {
@@ -23,7 +41,7 @@ const App = () => {
         }
         setTodos(starterTodos);
       })
-      .catch((error) => console.error('Error fetching initial data:', error));
+      .catch((error) => console.error('Error fetching initial data:', error)); */
   }, []);
 
   const handleAddTodo = (text) => {
