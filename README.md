@@ -39,12 +39,13 @@ Once your app is up and running
 
     ```javascript
     useEffect(() => {
+        // Async-await - create & call a function inside useEffect's callback
+        async function fetchTodos() {
         // Fetch initial data from the JSONPlaceholder API
-        fetch('https://jsonplaceholder.typicode.com/todos')
-        .then((response) => response.json())
-        .then((data) => {
-            // Add the first few todos to our todo object structure (the full list is pretty long, we don't need all of them)
-            const starterTodos = [];
+        const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+        const data = await response.json();
+
+        const starterTodos = [];
             for(let i=0; i<5; i++) {
             const item = data[i];
             starterTodos.push({
@@ -53,8 +54,8 @@ Once your app is up and running
             });
             }
             setTodos(starterTodos);
-        })
-        .catch((error) => console.error('Error fetching initial data:', error));
+        }
+        fetchTodos();
     }, []);
     ```
 
