@@ -39,41 +39,75 @@ Once your app is up and running
 
     ```javascript
     useEffect(() => {
+        // To use async-await - create & call a function inside useEffect's callback
+        async function fetchTodos() {
         // Fetch initial data from the JSONPlaceholder API
-        fetch('https://jsonplaceholder.typicode.com/todos')
-        .then((response) => response.json())
-        .then((data) => {
-            // Add the first few todos to our todo object structure (the full list is pretty long, we don't need all of them)
-            const starterTodos = [];
-            for(let i=0; i<5; i++) {
-            const item = data[i];
-            starterTodos.push({
-                id: item.id,
-                text: item.title,
-            });
-            }
-            setTodos(starterTodos);
-        })
-        .catch((error) => console.error('Error fetching initial data:', error));
+        const response = await fetch('https://jsonplaceholder.typicode.com/todos');
+        const data = await response.json();
+
+        const starterTodos = data.slice(0, 5);
+        console.log(starterTodos)
+        setTodos(starterTodos);
+        }
+        fetchTodos();
     }, []);
     ```
 
     </details>
-3. Create a **components** folder inside of **/src**
-4. In the **components** folder, add a new component, `TodoList`. This component...
+
+3. Write `add` and `delete` functions to update the state of your `todos` array. We'll need to pass these as props to other components
+
+<details><summary>👀 Show Solution</summary>
+
+```javascript
+const handleAddTodo = (text) => {
+const newTodo = {
+    id: nextID,
+    title: text,
+};
+
+setNextID((curID) => curID + 1);
+setTodos((prevTodos) => [...prevTodos, newTodo]);
+};
+
+const handleDeleteTodo = (id) => {
+setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+};
+```
+
+</details>
+
+4. Add some placeholder text to the `return` block that will later be replaced by the components we build in subsequent steps
+
+<details><summary>👀 Show Solution</summary>
+
+```javascript
+return (
+<div className="App">
+    <h1>Todo List</h1>
+
+</div>
+);
+```
+
+</details>
+
+5. Create a **components** folder inside of **/src**
+
+6. In the **components** folder, add a new component, `TodoList`. This component...
     - should accept at least two props - the list of Todos and a function to handle deleting a Todo
-    - should map over the list of Todos and render a component to display each 
+    - should map over the list of Todos and render a component to display each one
 
     <details><summary>👀 Show Solution</summary>
 
     ```javascript
     import Todo from './Todo';
 
-    const TodoList = ({ id, todos, onDelete }) => {
+    const TodoList = ({ todos, onDelete }) => {
         return (
         <ul>
             {todos.map((todo) => (
-            <Todo key={todo.id} id={todo.id} text={todo.text} onDelete={onDelete} />
+            <Todo key={todo.id} id={todo.id} text={todo.title} onDelete={onDelete} />
             ))}
         </ul>
         );
@@ -84,7 +118,7 @@ Once your app is up and running
 
     </details>
 
-5. In the **components** folder, add a new component, `Todo`, to represent a single Todo item. This component...
+7. In the **components** folder, add a new component, `Todo`, to represent a single Todo item. This component...
     - should accept at least three props - the id of the new Todo, the text describing the new Todo, and the delete function we can use to remove this Todo
     - will display the text of the Todo and a button to delete it. When the button is clicked, the delete function is called with the id passed in as a parameter to enable us to delete the correct Todo 
 
@@ -105,7 +139,7 @@ Once your app is up and running
 
     </details>
 
-6. In the **components** folder, add a new component, `AddTodoForm`. This component...
+8. In the **components** folder, add a new component, `AddTodoForm`. This component...
     - should accept at least one prop - a function to handle adding a new Todo
     - should provide inputs that allow a user to enter the text of a new Todo
         - remember to "control" your inputs
@@ -144,4 +178,9 @@ Once your app is up and running
 
     </details>
 
-7. Add some CSS to style your app however you'd like!
+9. Go back to `App.jsx` and import the TodoList and AddTodoForm so that you can render them. The hierarchy of your components should look something like...  
+![component-hierarchy](./public/hierarchy.png)
+
+10. Add some CSS to style your app however you'd like!
+
+_Optional_ - Check out the [React Developer Tools Chrome extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) for additional insights that can help when debugging React applications
