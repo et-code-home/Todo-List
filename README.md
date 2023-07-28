@@ -4,6 +4,8 @@
 
 This guide will walk you through how to build a simple Todo List application using React Function components, state, props, the `useEffect` hook and controlled components to set up forms. allow  with React. When finished, your app will allow the user to add new tasks, view the list of tasks, and delete tasks.
 
+![todo-preview](./public/todo.gif)
+
 ## Setup Instructions
 
 1. Fork this repository
